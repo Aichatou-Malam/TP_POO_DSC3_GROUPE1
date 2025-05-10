@@ -1,737 +1,459 @@
-class TPHeritage
-{
-    //Exercice n°1 - Classe Rectangle
-
-    public class Point {
-    
-        private double x;
-        private double y;
-        public Point (double x, double y){
-            this.x = x;
-            this.y = y;
-
-        }
-        public double getX(){
-            return x;
-
-        }
-        public double getY(){
-            return y;
-
-        }
-        public void translate(double dx, double dy){
-            this.x = this.x + dx;
-            this.y = this.y + dy;
-        }
-    }
-    public class Rectangle {
-        private Point bottomLeft;
-        private double width;
-        private double height;
-        private static int nbr = 0;
-        
-
-        // Constructeur avec 2 points
-        public Rectangle(Point bottomLeft, Point topRight) {
-            this.bottomLeft = bottomLeft;
-            this.width = topRight.getX() - bottomLeft.getX();
-            this.height = topRight.getY() - bottomLeft.getY();
-            nbr++;
-        }
-
-        // Constructeur avec 1 point et 2 longueurs
-        public Rectangle(Point bottomLeft, double width, double height) {
-            this.bottomLeft = bottomLeft;
-            this.width = width;
-            this.height = height;
-            nbr++;
-        }
-
-        // Constructeur avec 4 longueurs
-        public Rectangle(double x, double y, double width, double height) {
-            this.bottomLeft = new Point(x, y);
-            this.width = width;
-            this.height = height;
-            nbr++;
-        }
-        
-
-        // Méthode surface
-        public double surface() {
-            return width * height;
-        }
-
-        // Méthode translate
-        public void translateEasy(float dx, float dy) {
-            bottomLeft.translate(dx, dy);
-        }
-        //or
-        public Point TranslateStrong(double dx, double dy) {
-            return new Point(bottomLeft.getX() + dx, bottomLeft.getY() + dy);
-        }
-
-        // Méthode contains pour un point
-        public boolean contains(Point p) {
-            return p.getX() >= bottomLeft.getX() && 
-                p.getX() <= bottomLeft.getX() + width &&
-                p.getY() >= bottomLeft.getY() && 
-                p.getY() <= bottomLeft.getY() + height;
-        }
-
-        // Méthode contains pour un rectangle
-        public boolean contains(Rectangle r) {
-            return contains(r.bottomLeft) && 
-                contains(new Point(r.bottomLeft.getX() + r.width, 
-                                    r.bottomLeft.getY() + r.height));
-        }
-
-        // Méthode sameAs
-        public boolean sameAs(Rectangle other) {
-            return this.bottomLeft.equals(other.bottomLeft) &&
-                this.width == other.width &&
-                this.height == other.height;
-        }
-
-        // Méthode hull (statique)
-        public Rectangle hull(Rectangle[] rectangles) {
-            if (rectangles.length == 0) return null;
-            
-            double minX = rectangles[0].bottomLeft.getX();
-            double minY = rectangles[0].bottomLeft.getY();
-            double maxX = rectangles[0].bottomLeft.getX() + rectangles[0].width;
-            double maxY = rectangles[0].bottomLeft.getY() + rectangles[0].height;
-            
-
-            for (Rectangle r : rectangles) {
-                minX = Math.min(minX, r.bottomLeft.getX());
-                minY = Math.min(minY, r.bottomLeft.getY());
-                maxX = Math.max(maxX, r.bottomLeft.getX() + r.width);
-                maxY = Math.max(maxY, r.bottomLeft.getY() + r.height);
-            }
-            
-            return new Rectangle(new Point(minX, minY), maxX - minX, maxY - minY);
-        }
-        @Override
-        public boolean equals(Object obj) {
-            if (!(obj instanceof Rectangle)) return false;
-            Rectangle other = (Rectangle)obj;
-            return sameAs(other);
-        }
-        @Override
-        public String toString() {
-            return "Rectangle [bottomLeft=" + bottomLeft + ", width=" + width + ", height=" + height + "]";
-        }
-
-        // Getter pour nbr
-        public static int getNbr() {
-            return nbr;
-        }
-    }
-    //Exercie n°7 - Classe Dessin
-
-    // public class Dessin{
-    //     private Rectangle[] rectangles;
-    //     private int count;
-    //     private Rectangle hullRect;
-    //     public Dessin(int capacity) {
-    //         rectangles = new Rectangle[capacity];
-    //         count = 0;
-    //         hullRect = null;
-    //     }
-
-    //     public void add(Rectangle r) {
-    //         if (count < rectangles.length) {
-    //             rectangles[count++] = r;
-    //             updateHull(r);
-    //         }
-    //     }
-
-    //     private void updateHull(Rectangle r) {
-    //         if (hullRect == null) {
-    //             hullRect = new Rectangle(r.bottomLeft, r.width, r.height);
-    //         } else {
-    //             double minX = Math.min(hullRect.bottomLeft.getX(), r.bottomLeft.getX());
-    //             double minY = Math.min(hullRect.bottomLeft.getY(), r.bottomLeft.getY());
-    //             double maxX = Math.max(hullRect.bottomLeft.getX() + hullRect.width, 
-    //                                 r.bottomLeft.getX() + r.width);
-    //             double maxY = Math.max(hullRect.bottomLeft.getY() + hullRect.height, 
-    //                                 r.bottomLeft.getY() + r.height);
-                
-    //             hullRect = new Rectangle(new Point(minX, minY), maxX - minX, maxY - minY);
-    //         }
-    //     }
-
-    //     public double surface() {
-    //         double total = 0;
-    //         for (int i = 0; i < count; i++) {
-    //             total += rectangles[i].surface();
-    //         }
-    //         return total;
-    //     }
-
-    //     public void translate(double dx, double dy) {
-    //         for (int i = 0; i < count; i++) {
-
-    //             rectangles[i].translate(dx, dy);
-    //         }
-    //         if (hullRect != null) {
-    //             hullRect.translate(dx, dy);
-    //         }
-    //     }
-
-    //     public Rectangle hull() {
-    //         if (hullRect == null && count > 0) {
-    //             Rectangle[] existing = new Rectangle[count];
-    //             System.arraycopy(rectangles, 0, existing, 0, count);
-    //             hullRect = Rectangle.hull(existing);
-    //         }
-    //         return hullRect;
-    //     }
-    // }
-
-    //Exercices sur l'Héritage
-
-    //Exercice n°1 - Classe SlantedRectangle
-
-    public class SlantedRectangle extends Rectangle {
-        private double angle;
-
-        public SlantedRectangle(Point bottomLeft, double width, double height, double angle) {
-            super(bottomLeft, width, height);
-            this.angle = angle;
-        }
-
-        public SlantedRectangle(Point p1, Point p2, double angle) {
-            super(p1, p2);
-            this.angle = angle;
-        }
-
-        public SlantedRectangle(double x, double y, double width, double height, double angle) {
-            super(x, y, width, height);
-            this.angle = angle;
-        }
-
-        public void rotate(double deltaAngle) {
-            this.angle += deltaAngle;
-        }
-
-        @Override
-        public boolean contains(Point p) {
-            // Implémentation plus complexe qui tient compte de l'angle
-            // Pour simplifier, on garde la même implémentation que Rectangle
-            return super.contains(p);
-        }
-
-        
-        @Override
-        public boolean contains(Rectangle r) {
-            if (r instanceof SlantedRectangle) {
-                SlantedRectangle sr = (SlantedRectangle)r;
-                if (this.angle != sr.angle) return false;
-            }
-            // Implémentation simplifiée
-            return super.contains(r);
-        }
-
-        public boolean contains(SlantedRectangle sr) {
-            return this.angle == sr.angle && super.contains(sr);
-        }
-
-        @Override
-        public boolean sameAs(Rectangle other) {
-            if (!(other instanceof SlantedRectangle)) return false;
-            SlantedRectangle sr = (SlantedRectangle)other;
-            return super.sameAs(other) && this.angle == sr.angle;
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " [angle=" + angle + "]";
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (!(obj instanceof SlantedRectangle)) return false;
-            return sameAs((SlantedRectangle)obj);
-        }
-    }
-
-    //Exercice n°4 - Analyse des appels de méthode
-
-    //Les résultats des appels seraient:
-
-    // System.out.println(r.surface()); // OK - méthode de Rectangle
-    // r.rotate(2); // Erreur de compilation - rotate n'existe pas dans Rectangle
-    // System.out.println(r.contains(p)); // OK - méthode de Rectangle
-
-    // System.out.println(t.surface()); // OK - méthode héritée de Rectangle
-    // t.rotate(2); // OK - méthode de SlantedRectangle (polymorphisme)
-    // System.out.println(t.contains(p)); // OK - méthode redéfinie dans SlantedRectangle
-
-    // System.out.println(s.surface()); // OK - méthode héritée de Rectangle
-    // s.rotate(2); // OK - méthode de SlantedRectangle
-    // System.out.println(s.contains(p)); // OK - méthode redéfinie dans SlantedRectangle
-
-    //Exercice n°5 - Dessin avec rectangles inclinés
-
-    // Oui, la classe Dessin peut contenir des rectangles inclinés grâce au polymorphisme. Cependant:
-    // - `surface()` fonctionnera toujours correctement
-    // - `contains()` pourrait ne pas fonctionner correctement si l'implémentation ne tient pas compte de l'angle
-    // - `hull()` pourrait ne pas donner le résultat attendu si les rectangles sont inclinés différemment
-
-    // Exercice n°6 - Méthode toString()
-
-    // Dans la classe Rectangle
-    // @Override
-    // public String toString() {
-    //     return "Rectangle [bottomLeft=" + bottomLeft + ", width=" + width + ", height=" + height + "]";
-    // }
-
-    //C'est une définition (redéfinition de la méthode de Object). Il est utile de la redéfinir dans SlantedRectangle pour inclure l'angle.
-
-    // Exercice n°7 - Méthode equals()
-
-    // Dans la classe Rectangle
-    // @Override
-    // public boolean equals(Object obj) {
-    //     if (!(obj instanceof Rectangle)) return false;
-    //     Rectangle other = (Rectangle)obj;
-    //     return sameAs(other);
-    // }
-
-    // Dans la classe SlantedRectangle (déjà fait plus haut)
-    // Exercice n°8 - Fragment de programme
-
-    // Le fragment affichera:
-
-    // void f(A o) dans A
-    // void f(A o) dans A
-    // void f(A o) dans A
-    // void f(A o) dans B
-    // void f(A o) dans B
-    // void f(A o) dans B
-    // void f(A o) dans B
-    // void f(A o) dans B
-    // void f(A o) dans B
-
-    // Exercice n°9 - Ajout de f(B o) dans B
-
-    // C'est une surcharge (pas une redéfinition). Le fragment affichera:
-
-    // void f(A o) dans A
-    // void f(A o) dans A
-    // void f(A o) dans A
-    // void f(A o) dans B
-    // void f(A o) dans B
-    // void f(A o) dans B
-    // void f(B o) dans B
-    // void f(B o) dans B
-    // void f(B o) dans B
-
-    // Exercice n°10 - Ajout de f(B o) dans A
-
-    // C'est une surcharge. Le fragment affichera:
-
-    // void f(A o) dans A
-    // void f(A o) dans A
-    // void f(A o) dans A
-    // void f(A o) dans B
-    // void f(A o) dans B
-    // void f(A o) dans B
-    // void f(B o) dans B
-    // void f(B o) dans B
-    // void f(B o) dans B
-
-    // Exercice n°11 - instanceof
-
-    // Le fragment affichera:
-    // true
-    // true
-    // true
-    // false
-    // true
-    // true
-
-    // Exercice n°12 - Méthode contains
-
-    // La méthode `contains(Rectangle)` devrait être redéfinie dans SlantedRectangle pour tenir compte de l'angle. Les cas non couverts:
-    // - Un Rectangle standard contient-il un SlantedRectangle?
-    // - Un SlantedRectangle contient-il un Rectangle standard?
-
-    // Après ajout de contains(SlantedRectangle), il reste le cas où on essaie de vérifier si un Rectangle standard contient un SlantedRectangle (ou vice versa) avec des angles différents.
-
-    //  Exercice n°13 - Fragment de programme
-
-    // Le fragment affichera:
-
-    // C
-    // C
-    // C
-    // D
-    // D
-    // D
-
-    // Exercices sur les Interfaces
-
-    // Exercice n°1 - Classe Disque
-
-    public class Disque {
-        private Point center;
-        private double radius;
-
-        public Disque(Point center, double radius) {
-            this.center = center;
-            this.radius = radius;
-        }
-
-        public Disque(double x, double y, double radius) {
-            this.center = new Point(x, y);
-            this.radius = radius;
-        }
-
-        public void translate(double dx, double dy) {
-            center.translate(dx, dy);
-        }
-
-        public double surface() {
-            return Math.PI * radius * radius;
-        }
-
-        public boolean contains(Point p) {
-            return Math.sqrt(Math.pow(p.getX() - center.getX(), 2) + 
-                            Math.pow(p.getY() - center.getY(), 2)) <= radius;
-        }
-    }
-
-    // Exercice n°2 - Interface Figure
-
-    public interface Figure {
-        double surface();
-        void translate(double dx, double dy);
-        boolean contains(Point p);
-    }
-
-    //Exercice n°3 - Dessin implémentant Figure
-
-    // public class Dessin implements Figure
-    // {
-    //     private Figure[] figures;
-    //     private int count;
-    //     public Dessin(int capacity) {
-    //         figures = new Figure[capacity];
-    //         count = 0;
-    //     }
-
-    //     public void add(Figure f) {
-    //         if (count < figures.length) {
-    //             figures[count++] = f;
-    //         }
-    //     }
-
-    //     @Override
-    //     public double surface() {
-    //         double total = 0;
-    //         for (int i = 0; i < count; i++) {
-    //             total += figures[i].surface();
-    //         }
-    //         return total;
-    //     }
-
-    //     @Override
-    //     public void translate(double dx, double dy) {
-    //         for (int i = 0; i < count; i++) {
-    //             figures[i].translate(dx, dy);
-    //         }
-    //     }
-
-    //     @Override
-    //     public boolean contains(Point p) {
-    //         for (int i = 0; i < count; i++) {
-    //             if (figures[i].contains(p)) {
-    //                 return true;
-    //             }
-    //         }
-    //         return false;
-    //     }
-    // }
-
-    // Exercices sur les Expressions Arithmétiques (Page 6)
-
-    // Exercice n°4 - Interface ArithExpr
-
-    public interface ArithExpr {
-        double eval();
-        public String prefix();
-        public String suffix();
-    }
-
-    // Exercice n°5 - Classe Constant
-
-    public class Constant implements ArithExpr {
-        private double value;
-
-        public Constant(double value) {
-            this.value = value;
-        }
-        @Override
-        public String prefix() {
-            return toString();
-        }
-        @Override
-        public String suffix() {
-            return toString();
-        }
-        @Override
-        public double eval() {
-            return value;
-        }
-
-        @Override
-        public String toString() {
-            return String.valueOf(value);
-        }
-    }
-
-    //  Exercice n°6 - Classes pour les opérations
-
-    // On peut créer une classe abstraite BinaryOperation:
-
-    public abstract class BinaryOperation implements ArithExpr {
-        protected ArithExpr left;
-        protected ArithExpr right;
-
-        public BinaryOperation(ArithExpr left, ArithExpr right) {
-            this.left = left;
-            this.right = right;
-        }
-        // Dans BinaryOperation
-        public String prefix() {
-            return getOperator() + " " + left.prefix() + " " + right.prefix();
-        }
-
-        public String suffix() {
-            return left.suffix() + " " + right.suffix() + " " + getOperator();
-        }
-
-        protected abstract String getOperator();
-
-        protected abstract double operate(double a, double b);
-
-        @Override
-        public double eval() {
-            return operate(left.eval(), right.eval());
-        }
-    }
-
-    // Classes concrètes
-    public class Addition extends BinaryOperation {
-        public Addition(ArithExpr left, ArithExpr right) {
-            super(left, right);
-        }
-        @Override
-        protected String getOperator() {
-            return "+";
-        }
-
-        @Override
-        protected double operate(double a, double b) {
-            return a + b;
-        }
-
-        @Override
-        public String toString() {
-            return "(" + left + " + " + right + ")";
-        }
-    }
-    public class Soustraction extends BinaryOperation {
-        public Soustraction(ArithExpr left, ArithExpr right) {
-            super(left, right);
-        }
-        @Override
-        protected String getOperator() {
-            return "-";
-        }
-
-        @Override
-        protected double operate(double a, double b) {
-            return a - b;
-        }
-
-        @Override
-        public String toString() {
-            return "(" + left + " - " + right + ")";
-        }
-    }
-    public class Multiplication extends BinaryOperation {
-        public Multiplication(ArithExpr left, ArithExpr right) {
-            super(left, right);
-        }
-        @Override
-        protected String getOperator() {
-            return "*";
-        }
-
-        @Override
-        protected double operate(double a, double b) {
-            return a * b;
-        }
-
-        @Override
-        public String toString() {
-            return "(" + left + " * " + right + ")";
-        }
-    }
-    public class Division extends BinaryOperation 
-    {
-        public Division(ArithExpr left, ArithExpr right) 
-        {
-            super(left, right);
-        }
-        @Override
-        protected String getOperator() {
-            return "/";
-        }
-
-        @Override
-        protected double operate(double a, double b) {
-            return a / b;
-        }
-
-        @Override
-        public String toString() {
-            return "(" + left + " / " + right + ")";
-        }
-    }
-
-    
-
-    // Soustraction, Multiplication, Division similaires...
-
-    //    Exercice n°7 - Notations préfixe et suffixe
-
-    // // Dans BinaryOperation
-    // public String prefix() {
-    //     return getOperator() + " " + left.prefix() + " " + right.prefix();
-    // }
-
-    // public String suffix() {
-    //     return left.suffix() + " " + right.suffix() + " " + getOperator();
-    // }
-
-    // protected abstract String getOperator();
-
-    // Dans Addition
-    // @Override
-    // protected String getOperator() {
-    //     return "+";
-    // }
-
-    // Dans Constant
-    // @Override
-    // public String prefix() {
-    //     return toString();
-    // }
-
-    // @Override
-    // public String suffix() {
-    //     return toString();
-    // }
-
-    //  Exercice n°8 - Ajout de variables
-
-    // On ajoute une classe Variable :
-
-    // public class Variable implements ArithExpr {
-    //     private String name;
-    //     private java.util.function.Function<String, Double> resolver;// à rechercher
-
-    //     public Variable(String name, java.util.function.Function<String, Double> resolver) {
-    //         this.name = name ;
-    //         this.resolver = resolver ;
-    //     }
-
-    //     @Override
-    //     public double eval() {
-    //         Double value = resolver.apply(name);
-    //         if (value == null) {
-    //             throw new RuntimeException("Variable " + name + " non définie");
-    //         }
-    //         return value;
-    //     }
-
-    //     @Override
-    //     public String toString() {
-    //         return name;
-    //     }
-    // }
-
-    // * Exercice n°9 - Classe ArithExprParser
-
-    // public abstract class ArithExprParser {
-    //     public abstract ArithExpr parse(String s);
-    //     public abstract ArithExpr parse(java.io.Reader r);
-    // }
-
-    // Exercice n°10 - PrefixParser
-
-    // public class PrefixParser extends ArithExprParser {
-    //     @Override
-    //     public ArithExpr parse(String s) {
-    //         return parse(new java.io.StringReader(s));
-    //     }
-
-    //     @Override
-    //     public ArithExpr parse(java.io.Reader r) {
-    //         java.util.Scanner scanner = new java.util.Scanner(r);
-    //         return parse(scanner);
-    //     }
-
-    //     private ArithExpr parse(java.util.Scanner scanner) {
-    //         if (!scanner.hasNext()) {
-    //             throw new RuntimeException("Expression incomplète");
-    //         }
-            
-    //         String token = scanner.next();
-    //         switch (token) {
-    //             case "+":
-    //                 return new Addition(parse(scanner), parse(scanner));
-    //             case "-":
-    //                 return new Soustraction(parse(scanner), parse(scanner));
-    //             case "*":
-    //                 return new Multiplication(parse(scanner), parse(scanner));
-    //             case "/":
-    //                 return new Division(parse(scanner), parse(scanner));
-    //             default:
-    //                 try {
-    //                     return new Constant(Double.parseDouble(token));
-    //                 } catch (NumberFormatException e) {
-    //                     return new Variable(token, name -> {
-    //                         // Ici on pourrait avoir un mécanisme pour résoudre les variables
-    //                         throw new RuntimeException("Variable " + name + " non résolue");
-    //                     });
-    //                 }
-    //         }
-    //     }
-    // }
-
-    // Exercice n°11 - InfixParser (simplifié)
-
-    // public class InfixParser extends ArithExprParser {
-    //     @Override
-    //     public ArithExpr parse(String s) {
-    //         return parseExpression(new java.io.StringReader(s));
-    //     }
-
-    //     @Override
-    //     public ArithExpr parse(java.io.Reader r) {
-    //         return parseExpression(r);
-    //     }
-
-    //     private ArithExpr parseExpression(java.io.Reader r) {
-    //         // Implémentation simplifiée - en réalité il faudrait un analyseur syntaxique plus complexe
-    //         // utilisant peut-être l'algorithme Shunting-yard
-    //         throw new UnsupportedOperationException("Implémentation complexe non fournie ici");
-    //     }
-    // }
-
+public class TPHeritage {
+    public static void main(String[] args){  // Correction de "agrs" en "args"
+        int exercice = 5; // choisir l'exercice à executer ici
+        runExercice(exercice);
+    }
+    public static void runExercice(int n){
+        switch(n) {
+            case 1: exercice1();
+                break;
+            case 2: exercice2();
+                break;
+            case 3: exercice3();
+                break;
+            case 4: exercice4();
+                break;
+            case 5: exercice5();
+                break;
+            case 6: exercice6();
+                break;
+            case 7: exercice7();
+                break;
+            case 8: exercice8();
+                break;  // Ajout du break manquant après le case 8
+            case 9: exercice9();
+                break;
+            case 10: exercice10();
+                break;
+            case 11: exercice11();
+                break;
+            case 12: exercice12();
+                break;
+            case 13: exercice13();
+                break;
+            default: System.out.println("Exercice non défini");
+        }
+    }
+
+    // === CLASSE POINT ===
+    static class Point {
+        private double x, y;
+        public Point(double x, double y) {
+            this.x = x; this.y = y;
+        }
+        public double getX() { return x; }
+        public double getY() { return y; }
+        public void translate(double dx, double dy) {
+            this.x += dx; this.y += dy;
+        }
+        public String toString() {
+            return "(" + x + ", " + y + ")";
+        }
+    }
+
+    // === CLASSE RECTANGLE ===
+    static class Rectangle {
+        protected Point basGauche;
+        protected double largeur, hauteur;
+
+        public Rectangle(Point p, double l, double h) {
+            this.basGauche = p;
+            this.largeur = l;
+            this.hauteur = h;
+        }
+
+        public double surface() {
+            return largeur * hauteur;
+        }
+
+        public void translate(double dx, double dy) {
+            basGauche.translate(dx, dy);
+        }
+
+        public boolean contains(Point p) {
+            return (p.getX() >= basGauche.getX() && p.getX() <= basGauche.getX() + largeur
+                 && p.getY() >= basGauche.getY() && p.getY() <= basGauche.getY() + hauteur);
+        }
+
+        public boolean contains(Rectangle r) {
+            Point coinSupDroit = new Point(r.basGauche.getX() + r.largeur, r.basGauche.getY() + r.hauteur);
+            return this.contains(r.basGauche) && this.contains(coinSupDroit);
+        }
+
+        public boolean equals(Object o) {
+            if (!(o instanceof Rectangle)) return false;  // Correction pour compatibilité JDK < 16
+            Rectangle other = (Rectangle) o;  // Cast explicite ajouté
+            return this.basGauche.getX() == other.basGauche.getX() &&
+                   this.basGauche.getY() == other.basGauche.getY() &&
+                   this.largeur == other.largeur && this.hauteur == other.hauteur;
+        }
+
+        public void rotate(double angle) {
+            System.out.println("Rotation non définie pour Rectangle");
+        }
+
+        public String toString() {
+            return "Rectangle[" + basGauche + ", l=" + largeur + ", h=" + hauteur + "]";
+        }
+    }
+
+    // === CLASSE SLANTEDRECTANGLE (héritée) ===
+    static class SlantedRectangle extends Rectangle {
+        private double angle;
+
+        public SlantedRectangle(Point p, double l, double h) {
+            super(p, l, h);
+            this.angle = 0;
+        }
+
+        @Override
+        public void rotate(double angle) {
+            this.angle += angle;
+        }
+
+        @Override
+        public boolean contains(Point p) {
+            System.out.println("Test approximatif de contains pour SlantedRectangle");
+            return false;
+        }
+
+        @Override
+        public String toString() {
+            return "Slanted" + super.toString() + ", angle=" + angle;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof SlantedRectangle)) return false;  // Correction pour compatibilité JDK < 16
+            SlantedRectangle sr = (SlantedRectangle) o;  // Cast explicite ajouté
+            return super.equals(sr) && this.angle == sr.angle;
+        }
+    }
+
+    // === CLASSES POUR MASQUAGE ===
+    static class A {
+        void f(A o) { System.out.println("void f(A o) dans A"); }
+        void f(B o) { System.out.println("void f(B o) dans A"); }
+    }
+
+    static class B extends A {
+        @Override
+        void f(A o) { System.out.println("void f(A o) dans B"); }
+        @Override
+        void f(B o) { System.out.println("void f(B o) dans B"); }
+    }
+
+    static class C {
+        char ch = 'C';
+        char getCh() { return ch; }
+    }
+
+    static class D extends C {
+        char ch = 'D';
+        char getCh() { return ch; }
+    }
+
+    // === EXERCICES ===
+    public static void exercice1() {
+        SlantedRectangle s = new SlantedRectangle(new Point(0,0), 2, 3);
+        System.out.println(s);
+    }
+
+    public static void exercice2() {
+        SlantedRectangle s = new SlantedRectangle(new Point(1,1), 2, 3);
+        s.rotate(Math.PI/4);
+        System.out.println(s);
+    }
+
+    public static void exercice3() {
+        // Exercice 3 :
+        // La classe SlantedRectangle hérite des méthodes suivantes de Rectangle :
+        // - surface()
+        // - translate(double, double)
+        // - contains(Point)
+        // - contains(Rectangle)
+        // - equals(Object)
+        // - toString()
+        // - rotate(double)
+        // Les méthodes redéfinies dans SlantedRectangle sont :
+        // - rotate(double) : pour gérer l'angle d'inclinaison
+        // - contains(Point) : retourne false par approximation
+        // - toString() : ajoute l'angle à l'affichage
+        // - equals(Object) : compare aussi l'angle
+
+        SlantedRectangle s1 = new SlantedRectangle(new Point(0,0), 2, 3);
+        SlantedRectangle s2 = new SlantedRectangle(new Point(0,0), 2, 3);
+        System.out.println("surface: " + s1.surface());
+        System.out.println("contains: " + s1.contains(new Point(1,1)));
+        System.out.println("equals: " + s1.equals(s2));
+    }
+
+    public static void exercice4() {
+        // Exercice 4 :
+        // Test du comportement des appels de méthode selon le type déclaré et le type réel des objets.
+        // Ce test illustre le polymorphisme :
+        // - r est un Rectangle classique
+        // - t est de type Rectangle mais instance de SlantedRectangle (polymorphisme)
+        // - s est un SlantedRectangle
+        // Les méthodes appelées dépendent du type réel à l'exécution pour les méthodes redéfinies (ex: rotate, contains).
+
+        Point p = new Point(1,2);
+        Rectangle r = new Rectangle(p, 2, 3);
+        Rectangle t = new SlantedRectangle(p, 2, 3);
+        SlantedRectangle s = new SlantedRectangle(p, 2, 3);
+
+        System.out.println(r.surface());
+        r.rotate(2);
+        System.out.println(r.contains(p));
+
+        System.out.println(t.surface());
+        t.rotate(2);
+        System.out.println(t.contains(p));
+
+        System.out.println(s.surface());
+        s.rotate(2);
+        System.out.println(s.contains(p));
+    }
+
+    public static void exercice5() {
+        // Exercice 5 :
+        // Peut-on ajouter des SlantedRectangle dans Dessin ? OUI : ils héritent de Rectangle, donc polymorphisme.
+        // Les méthodes surface, contains, hull fonctionnent-elles ?
+        // - surface() : fonctionne si SlantedRectangle.surface() reste correcte, mais géométriquement l'aire pourrait différer.
+        // - contains(Point) : la méthode de SlantedRectangle est approximative, donc Dessin.contains(p) sera approximatif.
+        // - hull() : si basé sur les coordonnées droites du rectangle, ignore l'inclinaison. Résultat imprécis pour SlantedRectangle.
+
+        System.out.println("Dessin peut contenir des SlantedRectangle car ils héritent de Rectangle.");
+        System.out.println("Mais les méthodes comme contains peuvent nécessiter une redéfinition.");
+    }
+
+    public static void exercice6() {
+        Rectangle r = new Rectangle(new Point(1, 1), 2, 2);
+        System.out.println(r.toString());
+        SlantedRectangle sr = new SlantedRectangle(new Point(2, 2), 3, 3);
+        System.out.println(sr.toString());
+    }
+
+    public static void exercice7() {
+        SlantedRectangle sr1 = new SlantedRectangle(new Point(0, 0), 2, 2);
+        SlantedRectangle sr2 = new SlantedRectangle(new Point(0, 0), 2, 2);
+        System.out.println(sr1.equals(sr2));
+    }
+
+    public static void exercice8() {
+        // Exercice 8 :
+        // Ce test illustre le polymorphisme avec redéfinition de méthode f(A o)
+        // La méthode appelée dépend du type réel de l'objet appelant (a, ab, b)
+        // Le paramètre b est toujours vu comme un A à la compilation, donc c'est toujours f(A)
+        // Résultat attendu :
+        // A appelle sa propre méthode f(A o)
+        // B redéfinit f(A o), donc c'est sa version qui est appelée pour ab et b
+        // Affichage attendu :
+        // void f(A o) dans A
+        // void f(A o) dans A
+        // void f(A o) dans A
+        // void f(A o) dans B
+        // void f(A o) dans B
+        // void f(A o) dans B
+        // void f(A o) dans B
+        // void f(A o) dans B
+        // void f(A o) dans B
+
+        A a = new A();
+        A ab = new B();
+        B b = new B();
+
+        a.f(a); a.f(ab); a.f(b);
+        ab.f(a); ab.f(ab); ab.f(b);
+        b.f(a); b.f(ab); b.f(b);
+    }
+
+    public static void exercice9() { exercice8(); } // surcharge f(B o) dans B
+    public static void exercice10() { exercice8(); } // surcharge f(B o) dans A
+
+    public static void exercice11() {
+        // Exercice 11 :
+        // Test de l'opérateur instanceof avec classes A et B.
+        // instanceof vérifie si un objet est instance directe ou héritée d'une classe.
+        // Résultats attendus :
+        // a instanceof A => true (a est A)
+        // ab instanceof A => true (ab est un B, donc aussi un A)
+        // b instanceof A => true (héritage)
+        // a instanceof B => false (a n'est pas un B)
+        // ab instanceof B => true (réellement un B)
+        // b instanceof B => true
+
+        A a = new A();
+        A ab = new B();
+        B b = new B();
+
+        System.out.println(a instanceof A);
+        System.out.println(ab instanceof A);
+        System.out.println(b instanceof A);
+        System.out.println(a instanceof B);
+        System.out.println(ab instanceof B);
+        System.out.println(b instanceof B);
+    }
+
+    public static void exercice12() {
+        // Exercice 12 :
+        // Rectangle a une méthode contains(Rectangle). Faut-il la redéfinir dans SlantedRectangle ?
+        // - Si elle n'est pas redéfinie, le comportement sera celui d'un rectangle droit, ce qui est faux pour un rectangle incliné.
+        // - On peut ajouter contains(SlantedRectangle), mais cela n'est appelé que si le paramètre est typé exactement.
+        // => Aucun des deux cas ne couvre les appels polymorphes (upcasting). Pour une couverture correcte, il faut une gestion par instanceof.
+
+        Rectangle r = new Rectangle(new Point(0, 0), 4, 4);
+        SlantedRectangle sr = new SlantedRectangle(new Point(1, 1), 2, 2);
+        System.out.println("r.contains(sr) ? " + r.contains(sr));  // Correction: utiliser sr directement
+    }
+
+    public static void exercice13() {
+        // Exercice 13 :
+        // Montre la différence entre masquage d'attribut et redéfinition de méthode.
+        // En Java, les attributs ne sont pas dynamiques : l'accès c.ch utilise toujours le type déclaré (C).
+        // Les méthodes, elles, sont dynamiques : cd.getCh() utilise la méthode de D.
+        // Résultats attendus :
+        // c.ch => 'C' (champ de C)
+        // c.getCh() => 'C' (méthode de C)
+        // cd.ch => 'C' (champ de C car cd est typé C)
+        // cd.getCh() => 'D' (méthode de D car instance réelle = D)
+        // d.ch => 'D' (champ de D)
+        // d.getCh() => 'D' (méthode de D)
+
+        C c = new C();
+        C cd = new D();
+        D d = new D();
+
+        System.out.println(c.ch);
+        System.out.println(c.getCh());
+        System.out.println(cd.ch);
+        System.out.println(cd.getCh());
+        System.out.println(d.ch);
+        System.out.println(d.getCh());
+    }
+    
+    // === CLASSE DESSIN ===
+    static class Dessin {
+        private Rectangle[] rectangles;
+        private int nbRectangles;
+        private static final int MAX_RECTANGLES = 100;
+        
+        public Dessin() {
+            rectangles = new Rectangle[MAX_RECTANGLES];
+            nbRectangles = 0;
+        }
+        
+        public boolean add(Rectangle r) {
+            if (nbRectangles >= MAX_RECTANGLES) {
+                return false;
+            }
+            rectangles[nbRectangles++] = r;
+            return true;
+        }
+        
+        public double surface() {
+            double somme = 0;
+            for (int i = 0; i < nbRectangles; i++) {
+                somme += rectangles[i].surface();
+            }
+            return somme;
+        }
+        
+        public boolean contains(Point p) {
+            for (int i = 0; i < nbRectangles; i++) {
+                if (rectangles[i].contains(p)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        public Rectangle hull() {
+            if (nbRectangles == 0) {
+                return null;
+            }
+            
+            // Recherche des coordonnées min et max
+            double minX = Double.POSITIVE_INFINITY;
+            double minY = Double.POSITIVE_INFINITY;
+            double maxX = Double.NEGATIVE_INFINITY;
+            double maxY = Double.NEGATIVE_INFINITY;
+            
+            for (int i = 0; i < nbRectangles; i++) {
+                Rectangle r = rectangles[i];
+                double rMinX = r.basGauche.getX();
+                double rMinY = r.basGauche.getY();
+                double rMaxX = rMinX + r.largeur;
+                double rMaxY = rMinY + r.hauteur;
+                
+                if (rMinX < minX) minX = rMinX;
+                if (rMinY < minY) minY = rMinY;
+                if (rMaxX > maxX) maxX = rMaxX;
+                if (rMaxY > maxY) maxY = rMaxY;
+            }
+            
+            // Création du rectangle englobant
+            Point basGauche = new Point(minX, minY);
+            double largeur = maxX - minX;
+            double hauteur = maxY - minY;
+            
+            return new Rectangle(basGauche, largeur, hauteur);
+        }
+        
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder("Dessin avec " + nbRectangles + " rectangles:\n");
+            for (int i = 0; i < nbRectangles; i++) {
+                sb.append("  ").append(i+1).append(": ").append(rectangles[i]).append("\n");
+            }
+            return sb.toString();
+        }
+    }
+    
+    public static void exercice14() {
+        // Test de la classe Dessin avec des rectangles simples
+        Dessin dessin = new Dessin();
+        dessin.add(new Rectangle(new Point(0, 0), 2, 2));
+        dessin.add(new Rectangle(new Point(3, 3), 1, 1));
+        System.out.println(dessin);
+        System.out.println("Surface totale: " + dessin.surface());
+        System.out.println("Contient (1,1): " + dessin.contains(new Point(1, 1)));
+        System.out.println("Contient (2.5,2.5): " + dessin.contains(new Point(2.5, 2.5)));
+        System.out.println("Rectangle englobant: " + dessin.hull());
+    }
+    
+    public static void exercice15() {
+        // Test de polymorphisme avec Dessin et SlantedRectangle
+        Dessin dessin = new Dessin();
+        dessin.add(new Rectangle(new Point(0, 0), 2, 2));
+        dessin.add(new SlantedRectangle(new Point(3, 3), 1, 1));
+        System.out.println(dessin);
+        System.out.println("Surface totale: " + dessin.surface());
+        
+        // Test du comportement de contains avec SlantedRectangle
+        System.out.println("Contient (3.5,3.5) - point dans SlantedRectangle: " + 
+                           dessin.contains(new Point(3.5, 3.5)));
+        
+        // Test du rectangle englobant qui ignore l'angle du SlantedRectangle
+        System.out.println("Rectangle englobant: " + dessin.hull());
+    }
+    
+    public static void exercice16() {
+        // Test du cast et du traitement spécifique pour SlantedRectangle
+        Dessin dessin = new Dessin();
+        dessin.add(new Rectangle(new Point(0, 0), 3, 2));
+        dessin.add(new SlantedRectangle(new Point(4, 1), 2, 2));
+        
+        // Parcourir les rectangles et traiter différemment selon leur type réel
+        for (int i = 0; i < 2; i++) {
+            Rectangle r = dessin.rectangles[i];
+            System.out.println("Rectangle " + (i+1) + ": " + r);
+            
+            if (r instanceof SlantedRectangle) {
+                SlantedRectangle sr = (SlantedRectangle) r;
+                sr.rotate(Math.PI/4);  // Rotation spécifique aux SlantedRectangle
+                System.out.println("Après rotation: " + sr);
+            }
+        }
+    }
 }
