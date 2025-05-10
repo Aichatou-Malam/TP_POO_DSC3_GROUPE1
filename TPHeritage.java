@@ -1,5 +1,39 @@
-class TPHeritage
-{
+public class TPHeritage {   
+  public static void main(String[] args){       
+    int exercice = 5; // choisir l'exercice à executer ici        
+    runExercice(exercice);    }  
+  public static void runExercice(int n){        
+    switch(n) {           
+      case 1: exercice1();                
+        break;           
+      case 2: exercice2();             
+        break;            
+      case 3: exercice3();             
+        break;            
+      case 4: exercice4();               
+        break;            
+      case 5: exercice5();               
+        break;            
+      case 6: exercice6();              
+        break;            
+      case 7: exercice7();              
+        break;            
+      case 8: exercice8();             
+        break;   
+      case 9: exercice9();               
+        break;           
+      case 10: exercice10();               
+        break;           
+      case 11: exercice11();                
+        break;            
+      case 12: exercice12();              
+        break;            
+      case 13: exercice13();             
+        break;           
+      default: System.out.println("Exercice non défini");      
+    }    
+  }
+
     //Exercice n°1 - Classe Rectangle
 
     public class Point {
