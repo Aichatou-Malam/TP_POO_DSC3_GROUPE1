@@ -1,4 +1,4 @@
-class Abdoul_Rachid
+class TPHeritage
 {
     //Exercice n°1 - Classe Rectangle
 
